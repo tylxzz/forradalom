@@ -28,6 +28,37 @@ const tbody = document.createElement('tbody')  // Létrehoz egy új tbody elemet
 tableSimple.appendChild(tbody)  // Hozzáadja a tbody elemet a tableSimple-hez
 
 const form = createDiv('form') // Létrehoz egy új div elemet a 'form' className-nel
+const formSimple = document.createElement('form') // Létrehoz egy új form elemet
+form.appendChild(formSimple) // Hozzáadja a formSimple elemet a form divzhez
+const elements = [{ // Létrehoz egy tömböt az űrlap elemeivel
+    id: 'forradalom',   // Létrehoz egy új id elemet
+    label: 'forradalom',    // Létrehoz egy új label elemet
+},
+{
+    id: 'evszam',   // Létrehoz egy új id elemet
+    label: 'evszam',    // Létrehoz egy új label elemet
+}, 
+{
+    id: 'sikeres',  // Létrehoz egy új id elemet
+    label: 'sikeres',   // Létrehoz egy új label elemet
+}]  // Létrehoz egy tömböt az űrlap elemeivel
+
+for(const element of elements) {  // Végigiterál az űrlap elemeinek tömbjén
+    const field = createDiv('field')  // Létrehoz egy új div elemet a 'field' className-nel
+    formSimple.appendChild(field)  // Hozzáadja a field elemet a formSimple-hez
+    const label = document.createElement('label')  // Létrehoz egy új label elemet
+    label.htmlFor = element.id  // Beállítja a label htmlFor attribútumát az element.id változóra
+    label.textContent = element.label  // Beállítja a label szövegét az element.label változóra
+    field.appendChild(label)  // Hozzáadja a label elemet a formSimple-hez
+    const input = document.createElement('input')  // Létrehoz egy új input elemet
+    input.id = element.id  // Beállítja az input id attribútumát az element.id változóra
+    field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
+    field.appendChild(input)  // Hozzáadja az input elemet a formSimple-hez
+}
+
+const button = document.createElement('button')  // Létrehoz egy új button elemet
+button.textContent = 'Hozzáadás'  // Beállítja a button szövegét
+formSimple.appendChild(button)  // Hozzáadja a button elemet a formSimple-hez
 
 container.appendChild(table)  // Hozzáadja a table divet a container divhez
 container.appendChild(form)  // Hozzáadja a form divet a container divhez
