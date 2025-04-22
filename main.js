@@ -24,6 +24,8 @@ for(const content of theadCells) {  // Végigiterál a thead cellák tömbjén
     cell.innerText = content    // Beállítja a cella szövegét a content változóra
     tr.appendChild(cell)    // Hozzáadja a cellát a tr elemhez
 }
+const tbody = document.createElement('tbody')  // Létrehoz egy új tbody elemet
+tableSimple.appendChild(tbody)  // Hozzáadja a tbody elemet a tableSimple-hez
 
 const form = createDiv('form') // Létrehoz egy új div elemet a 'form' className-nel
 
