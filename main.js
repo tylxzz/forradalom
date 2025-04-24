@@ -166,3 +166,20 @@ fileInput.addEventListener('change', (e) => {  // Hozzáad egy eseményfigyelőt
     }
     reader.readAsText(file)  // Beolvassa a fájlt szövegként
 })
+
+const download = document.createElement('button')  // Létrehoz egy új button elemet
+download.textContent = 'Letöltés'  // Beállítja a button szövegét
+container.appendChild(download)  // Hozzáadja a download elemet a container divhez
+download.addEventListener('click', () => {  // Hozzáad egy eseményfigyelőt a download gombhoz
+    const link = document.createElement('a')  // Létrehoz egy új a elemet
+    const contentArray = ['forradalom;evszam;sikeres']  // Létrehoz egy új tömböt a fájl tartalmának
+    for(const revolution of array) {  // Végigiterál a forradalmak tömbjén
+        contentArray.push(`${revolution.forradalom};${revolution.evszam};${revolution.sikeres}`)  // Hozzáadja a forradalom mezőit a fájl tartalmához
+    }
+    const content = contentArray.join('\n')  // Összefűzi a fájl tartalmát sorokra
+    const file = new Blob([content])  // Létrehoz egy új Blob objektumot a fájl tartalmával
+    link.href = URL.createObjectURL(file)  // Beállítja a link href attribútumát a Blob objektumra
+    link.download = 'newdata.csv'  // Beállítja a link letöltési nevét
+    link.click()  // Kattint a linkre, hogy letöltse a fájlt
+    URL.revokeObjectURL(link.href)  // Visszavonja a Blob objektum URL-jét
+})
