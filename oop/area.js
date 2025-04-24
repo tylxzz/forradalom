@@ -130,16 +130,23 @@ class Form extends Area {
         form.addEventListener('submit', (e) => { // Hozzáad egy eseményfigyelőt a form elemhez
             e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
             const object = {} // Létrehoz egy új objektumot
-            const inputFields = form.querySelectorAll('input, select') // Kiválasztja az összes input és select elemet a form elemben
-            for(const field of inputFields) { // Végigiterál az input és select elemek tömbjén
-                if(field.id === 'sikeres') { // Ha az elem id-ja 'sikeres'
-                    object[field.id] = field.value === 'igen' // Beállítja az objektum értékét a field.value változóra
+            let valid = true // Inicializálja a valid változót
+            for(const formField of this.#formFieldArray) { // Végigiterál a formFieldArray tömbön
+                formField.error = '' // Beállítja a formField error változóját üresre
+                if(formField.value === '') { // Ha a formField értéke üres
+                    formField.error = 'Kötelező mező!' // Beállítja a formField error változóját
+                    valid = false // Beállítja a valid változót hamisra
+                }
+                if(formField.id === 'sikeres') { // Ha az elem id-ja 'sikeres'
+                    object[formField.id] = formField.value === 'igen' // Beállítja az objektum értékét a field.value változóra
                 } else {
-                    object[field.id] = field.value // Beállítja az objektum értékét a field.value változóra
+                    object[formField.id] = formField.value // Beállítja az objektum értékét a field.value változóra
                 }
             }
-            const revolution = new Revolution(object.forradalom, object.evszam, object.sikeres) // Létrehoz egy új Revolution objektumot
-            this.manager.AddRevolution(revolution) // Hozzáadja a forradalmat a manager-hez
+            if(valid) { // Ha a valid változó igaz
+                const revolution = new Revolution(object.forradalom, object.evszam, object.sikeres) // Létrehoz egy új Revolution objektumot
+                this.manager.AddRevolution(revolution) // Hozzáadja a forradalmat a manager-hez
+            }
         })
     }
 }

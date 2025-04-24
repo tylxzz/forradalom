@@ -76,6 +76,7 @@ for(const element of elements) {  // Végigiterál az űrlap elemeinek tömbjén
         field.appendChild(input)  // Hozzáadja az input elemet a field-hez
     }
 
+    field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
     const error = document.createElement('span')  // Létrehoz egy új span elemet az error üzenetekhez
     error.className = 'error'  // Beállítja a span className-jét 'error'-ra
     field.appendChild(error)  // Hozzáadja a span elemet a field-hez
