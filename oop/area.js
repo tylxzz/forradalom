@@ -51,3 +51,45 @@ class Table extends Area {
         table.appendChild(tbody) // Hozzáadja a tbody elemet a table elemhez
     }
 }
+
+class Form extends Area {
+    /**
+     * 
+     * @param {cssClass} cssClass 
+     */
+    constructor(cssClass) { // Ez a konstruktor a Form osztályhoz tartozik, ami az Area osztályból származik
+        super(cssClass) // Meghívja a szülő osztály konstruktorát
+        const form = document.createElement('form') // Létrehoz egy új form elemet
+        this.div.appendChild(form) // Hozzáadja a form elemet a div elemhez
+        const elements = [{ // Létrehoz egy tömböt az űrlap elemeivel
+            id: 'forradalom',   // Létrehoz egy új id elemet
+            label: 'forradalom',    // Létrehoz egy új label elemet
+        },
+        {
+            id: 'evszam',   // Létrehoz egy új id elemet
+            label: 'evszam',    // Létrehoz egy új label elemet
+        }, 
+        {
+            id: 'sikeres',  // Létrehoz egy új id elemet
+            label: 'sikeres',   // Létrehoz egy új label elemet
+        }]  // Létrehoz egy tömböt az űrlap elemeivel
+
+        for(const element of elements) // Végigiterál az űrlap elemeinek tömbjén
+        {
+            const field = createDiv('field') // Létrehoz egy új div elemet a 'field' className-nel
+            form.appendChild(field) // Hozzáadja a field elemet a form elemhez
+            const label = document.createElement('label') // Létrehoz egy új label elemet
+            label.htmlFor = element.id // Beállítja a label htmlFor attribútumát az element.id változóra
+            label.textContent = element.label // Beállítja a label szövegét az element.label változóra
+            field.appendChild(label) // Hozzáadja a label elemet a field elemhez
+            const input = document.createElement('input') // Létrehoz egy új input elemet
+            input.id = element.id // Beállítja az input id attribútumát az element.id változóra
+            field.appendChild(document.createElement('br')) // Hozzáad egy új br elemet a field elemhez
+            field.appendChild(input) // Hozzáadja az input elemet a field elemhez
+        }
+
+        const button = document.createElement('button') // Létrehoz egy új button elemet
+        button.textContent = 'Hozzáadás' // Beállítja a button szövegét
+        form.appendChild(button) // Hozzáadja a button elemet a form elemhez
+    }
+}
