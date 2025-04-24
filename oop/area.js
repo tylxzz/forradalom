@@ -151,6 +151,36 @@ class Form extends Area {
     }
 }
 
+class Upload extends Area {
+    /**
+     * 
+     * @param {cssClass} cssClass 
+     * @param {Manager} manager 
+     */
+    constructor(cssClass, manager) { // Ez a konstruktor az Upload osztályhoz tartozik, ami az Area osztályból származik
+        super(cssClass, manager) // Meghívja a szülő osztály konstruktorát
+        const input = document.createElement('input') // Létrehoz egy új input elemet
+        input.id = 'fileinput' // Beállítja az input típusát fájlra
+        input.type = 'file'  // Beállítja a fileInput típusát 'file'-ra
+        this.div.appendChild(input) // Hozzáadja a fileInput elemet a div elemhez
+        input.addEventListener('change', (e) => {  // Hozzáad egy eseményfigyelőt a fileInput-hoz 
+            const file = e.target.files[0]  // Lekéri az első fájlt
+            const reader = new FileReader()  // Létrehoz egy új FileReader objektumot
+            reader.onload = () => {  // Hozzáad egy eseményfigyelőt a FileReader-hez
+                const lines = reader.result.split('\n')  // Felosztja a fájl tartalmát sorokra
+                const remove = lines.slice(1) // Eltávolítja az első sort (fejléc)
+                for(const line of remove) {  // Végigiterál a sorokon
+                    const trimmed = line.trim()  // Levágja a sor elejéről és végéről a szóközöket
+                    const fields = trimmed.split(';')  // Felosztja a sort mezőkre
+                    const revolution = new Revolution(fields[0], fields[1], fields[2])  // Létrehoz egy új Revolution objektumot
+                    this.manager.AddRevolution(revolution)  // Hozzáadja a forradalmat a manager-hez
+                }
+            }
+            reader.readAsText(file)  // Beolvassa a fájlt szövegként
+        })
+    }
+}
+
 class FormField {
     /**
      * @type {string}

@@ -136,7 +136,7 @@ fileInput.type = 'file'  // Beállítja a fileInput típusát 'file'-ra
 fileInput.addEventListener('change', (e) => {  // Hozzáad egy eseményfigyelőt a fileInput-hoz 
     const file = e.target.files[0]  // Lekéri az első fájlt
     const reader = new FileReader()  // Létrehoz egy új FileReader objektumot
-    reader.onload = (e) => {  // Hozzáad egy eseményfigyelőt a FileReader-hez
+    reader.onload = () => {  // Hozzáad egy eseményfigyelőt a FileReader-hez
         const lines = reader.result.split('\n')  // Felosztja a fájl tartalmát sorokra
         const remove = lines.slice(1) // Eltávolítja az első sort (fejléc)
         for(const line of remove) {  // Végigiterál a sorokon
