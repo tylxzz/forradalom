@@ -31,8 +31,6 @@ class Manager {
      */
     AddRevolution(revolution) {  // Ez a setter beállítja a #addRevolution változót
         this.#array.push(revolution) // Hozzáadja a forradalmat a tömbhöz
-        if(this.#addRevolutionCallback) { // Ha a #addRevolutionCallback változó nem undefined
-            this.#addRevolutionCallback(revolution) // Meghívja a #addRevolutionCallback változót, és átadja neki a tömböt
-        }
+        this.#addRevolutionCallback(revolution) // Meghívja a #addRevolutionCallback változót, és átadja neki a tömböt
     }
 }
