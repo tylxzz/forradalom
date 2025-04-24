@@ -5,17 +5,31 @@ class Area {
     #div // Ez egy privát változó, ami a div elemet tárolja
 
     /**
+     * @type {Manager}
+     */
+    #manager // Ez egy privát változó, ami a manager elemet tárolja
+
+    /**
      * @type {HTMLDivElement}
      */
     get div() { // Ez egy getter, ami visszaadja a #div változót
         return this.#div // Visszaadja a #div változót
     }
+
+    /**
+     * @returns {Manager}
+     */
+    get manager() { // Ez egy getter, ami visszaadja a #manager változót
+        return this.#manager // Visszaadja a #manager változót
+    }
     
     /**
      * 
      * @param {className} className 
+     * @param {Manager} manager
      */
-    constructor(className) {
+    constructor(className, manager) {
+        this.#manager = manager // Beállítja a #manager változót
         const container = this.#getContainerDiv() // Meghívja a #getContainerDiv metódust, ami visszaadja a container elemet
         this.#div = document.createElement('div') // Létrehoz egy új div elemet
         this.#div.className = className // Beállítja a className-t a div elemre
@@ -40,10 +54,27 @@ class Table extends Area {
     /**
      * 
      * @param {cssClass} cssClass 
+     * @param {Manager} manager
      */
-    constructor(cssClass) { // Ez a konstruktor a Table osztályhoz tartozik, ami az Area osztályból származik
-        super(cssClass) // Meghívja a szülő osztály konstruktorát
+    constructor(cssClass, manager) { // Ez a konstruktor a Table osztályhoz tartozik, ami az Area osztályból származik
+        super(cssClass, manager) // Meghívja a szülő osztály konstruktorát
         const tbody = this.#createTable() // Meghívja a #createTable metódust, ami létrehoz egy új táblázatot
+        this.manager.setAddRevolutionCallback((revolution) => { // Beállítja a #addRevolutionCallback változót
+            const tr = document.createElement('tr') // Létrehoz egy új tr elemet
+            tbody.appendChild(tr) // Hozzáadja a tr elemet a tbody elemhez
+
+            const forradalomCell = document.createElement('td') // Létrehoz egy új td elemet
+            forradalomCell.innerText = revolution.forradalom // Beállítja a td szövegét a forradalom változóra
+            tr.appendChild(forradalomCell) // Hozzáadja a td elemet a tr elemhez
+            
+            const evszamCell = document.createElement('td') // Létrehoz egy új td elemet
+            evszamCell.innerText = revolution.evszam // Beállítja a td szövegét az evszam változóra
+            tr.appendChild(evszamCell) // Hozzáadja a td elemet a tr elemhez
+
+            const sikeresCell = document.createElement('td') // Létrehoz egy új td elemet
+            sikeresCell.innerText = revolution.sikeres ? 'igen' : 'nem' // Beállítja a td szövegét a sikeres változóra
+            tr.appendChild(sikeresCell) // Hozzáadja a td elemet a tr elemhez
+        })
     }
 
     /**
@@ -74,9 +105,10 @@ class Form extends Area {
      * 
      * @param {cssClass} cssClass 
      * @param {{ id: string, label: string }[]} elements
+     * @param {Manager} manager
      */
-    constructor(cssClass, elements) { // Ez a konstruktor a Form osztályhoz tartozik, ami az Area osztályból származik
-        super(cssClass) // Meghívja a szülő osztály konstruktorát
+    constructor(cssClass, elements, manager) { // Ez a konstruktor a Form osztályhoz tartozik, ami az Area osztályból származik
+        super(cssClass, manager) // Meghívja a szülő osztály konstruktorát
         const form = document.createElement('form') // Létrehoz egy új form elemet
         this.div.appendChild(form) // Hozzáadja a form elemet a div elemhez
         for(const element of elements) // Végigiterál az űrlap elemeinek tömbjén
@@ -114,5 +146,19 @@ class Form extends Area {
         const button = document.createElement('button') // Létrehoz egy új button elemet
         button.textContent = 'Hozzáadás' // Beállítja a button szövegét
         form.appendChild(button) // Hozzáadja a button elemet a form elemhez
+        form.addEventListener('submit', (e) => { // Hozzáad egy eseményfigyelőt a form elemhez
+            e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
+            const object = {} // Létrehoz egy új objektumot
+            const inputFields = form.querySelectorAll('input, select') // Kiválasztja az összes input és select elemet a form elemben
+            for(const field of inputFields) { // Végigiterál az input és select elemek tömbjén
+                if(field.id === 'sikeres') { // Ha az elem id-ja 'sikeres'
+                    object[field.id] = field.value === 'igen' // Beállítja az objektum értékét a field.value változóra
+                } else {
+                    object[field.id] = field.value // Beállítja az objektum értékét a field.value változóra
+                }
+            }
+            const revolution = new Revolution(object.forradalom, object.evszam, object.sikeres) // Létrehoz egy új Revolution objektumot
+            this.manager.AddRevolution(revolution) // Hozzáadja a forradalmat a manager-hez
+        })
     }
 }

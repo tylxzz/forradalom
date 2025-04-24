@@ -14,5 +14,6 @@ const fConfig = [{ // Létrehoz egy tömböt az űrlap elemeivel
     label: 'sikeres',   // Létrehoz egy új label elemet
 }]  // Létrehoz egy tömböt az űrlap elemeivel
 
-const tableDiv = new Table('table') // Létrehoz egy új Table divet a 'table' className-nel
-const formDiv = new Form('form', fConfig) // Létrehoz egy új Form divet a 'form' className-nel  
+const manager = new Manager() // Létrehoz egy új Manager objektumot
+const tableDiv = new Table('table', manager) // Létrehoz egy új Table divet a 'table' className-nel
+const formDiv = new Form('form', fConfig, manager) // Létrehoz egy új Form divet a 'form' className-nel  
