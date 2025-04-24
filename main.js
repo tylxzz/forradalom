@@ -1,3 +1,5 @@
+const array = [] // Létrehoz egy üres tömböt
+
 /**
  * 
  * @param {className} className 
@@ -50,15 +52,61 @@ for(const element of elements) {  // Végigiterál az űrlap elemeinek tömbjén
     label.htmlFor = element.id  // Beállítja a label htmlFor attribútumát az element.id változóra
     label.textContent = element.label  // Beállítja a label szövegét az element.label változóra
     field.appendChild(label)  // Hozzáadja a label elemet a formSimple-hez
-    const input = document.createElement('input')  // Létrehoz egy új input elemet
-    input.id = element.id  // Beállítja az input id attribútumát az element.id változóra
-    field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
-    field.appendChild(input)  // Hozzáadja az input elemet a formSimple-hez
+
+    if (element.id === 'sikeres') {  // Ha az elem id-ja 'sikeres'
+        const select = document.createElement('select')  // Létrehoz egy új select elemet
+        select.id = element.id  // Beállítja a select id attribútumát az element.id változóra
+
+        const optionYes = document.createElement('option')  // Létrehoz egy új option elemet
+        optionYes.value = 'igen'  // Beállítja az option értékét
+        optionYes.textContent = 'Igen'  // Beállítja az option szövegét
+        select.appendChild(optionYes)  // Hozzáadja az option elemet a select-hez
+
+        const optionNo = document.createElement('option')  // Létrehoz egy új option elemet
+        optionNo.value = 'nem'  // Beállítja az option értékét
+        optionNo.textContent = 'Nem'  // Beállítja az option szövegét
+        select.appendChild(optionNo)  // Hozzáadja az option elemet a select-hez
+
+        field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
+        field.appendChild(select)  // Hozzáadja a select elemet a field-hez
+    } else {
+        const input = document.createElement('input')  // Létrehoz egy új input elemet
+        input.id = element.id  // Beállítja az input id attribútumát az element.id változóra
+        field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
+        field.appendChild(input)  // Hozzáadja az input elemet a field-hez
+    }
 }
 
 const button = document.createElement('button')  // Létrehoz egy új button elemet
 button.textContent = 'Hozzáadás'  // Beállítja a button szövegét
 formSimple.appendChild(button)  // Hozzáadja a button elemet a formSimple-hez
+formSimple.addEventListener('submit', (e) => {  // Hozzáad egy eseményfigyelőt a formSimple-hez
+    e.preventDefault()  // Megakadályozza az alapértelmezett esemény végrehajtását
+    const object = {}  // Létrehoz egy új objektumot
+    const inputFields = e.target.querySelectorAll('input')  // Létrehoz egy új tömböt az input mezőkkel
+    for(const field of inputFields) {  // Végigiterál az input mezők tömbjén
+        object[field.id] = field.value  // Beállítja az objektum mezőit az input mezők értékére
+    }
+    const selectFields = e.target.querySelectorAll('select')  // Lekéri az összes select mezőt
+    for(const field of selectFields) {  // Végigiterál a select mezőkön
+        object[field.id] = field.value  // Beállítja az objektum mezőit a select mezők értékére
+    }
+    array.push(object)  // Hozzáadja az objektumot az array tömbhöz
+    const tr = document.createElement('tr')  // Létrehoz egy új tr elemet
+    tbody.appendChild(tr)  // Hozzáadja a tr elemet a tbody-hoz
+
+    const forradalomCell = document.createElement('td')  // Létrehoz egy új td elemet
+    forradalomCell.textContent = object.forradalom  // Beállítja a td szövegét az objektum forradalom mezőjére
+    tr.appendChild(forradalomCell)  // Hozzáadja a td elemet a tr elemhez
+
+    const evszamCell = document.createElement('td')  // Létrehoz egy új td elemet
+    evszamCell.textContent = object.evszam  // Beállítja a td szövegét az objektum evszam mezőjére
+    tr.appendChild(evszamCell)  // Hozzáadja a td elemet a tr elemhez
+
+    const sikeresCell = document.createElement('td')  // Létrehoz egy új td elemet
+    sikeresCell.textContent = object.sikeres  // Beállítja a td szövegét az objektum sikeres mezőjére
+    tr.appendChild(sikeresCell)  // Hozzáadja a td elemet a tr elemhez
+})
 
 container.appendChild(table)  // Hozzáadja a table divet a container divhez
 container.appendChild(form)  // Hozzáadja a form divet a container divhez

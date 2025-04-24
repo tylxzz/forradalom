@@ -82,10 +82,28 @@ class Form extends Area {
             label.htmlFor = element.id // Beállítja a label htmlFor attribútumát az element.id változóra
             label.textContent = element.label // Beállítja a label szövegét az element.label változóra
             field.appendChild(label) // Hozzáadja a label elemet a field elemhez
-            const input = document.createElement('input') // Létrehoz egy új input elemet
-            input.id = element.id // Beállítja az input id attribútumát az element.id változóra
-            field.appendChild(document.createElement('br')) // Hozzáad egy új br elemet a field elemhez
-            field.appendChild(input) // Hozzáadja az input elemet a field elemhez
+            if (element.id === 'sikeres') {  // Ha az elem id-ja 'sikeres'
+                const select = document.createElement('select')  // Létrehoz egy új select elemet
+                select.id = element.id  // Beállítja a select id attribútumát az element.id változóra
+        
+                const optionYes = document.createElement('option')  // Létrehoz egy új option elemet
+                optionYes.value = 'igen'  // Beállítja az option értékét
+                optionYes.textContent = 'Igen'  // Beállítja az option szövegét
+                select.appendChild(optionYes)  // Hozzáadja az option elemet a select-hez
+        
+                const optionNo = document.createElement('option')  // Létrehoz egy új option elemet
+                optionNo.value = 'nem'  // Beállítja az option értékét
+                optionNo.textContent = 'Nem'  // Beállítja az option szövegét
+                select.appendChild(optionNo)  // Hozzáadja az option elemet a select-hez
+        
+                field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
+                field.appendChild(select)  // Hozzáadja a select elemet a field-hez
+            } else {
+                const input = document.createElement('input')  // Létrehoz egy új input elemet
+                input.id = element.id  // Beállítja az input id attribútumát az element.id változóra
+                field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
+                field.appendChild(input)  // Hozzáadja az input elemet a field-hez
+            }
         }
 
         const button = document.createElement('button') // Létrehoz egy új button elemet
