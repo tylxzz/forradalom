@@ -16,15 +16,23 @@ class Area {
      * @param {className} className 
      */
     constructor(className) {
+        const container = this.#getContainerDiv() // Meghívja a #getContainerDiv metódust, ami visszaadja a container elemet
+        this.#div = document.createElement('div') // Létrehoz egy új div elemet
+        this.#div.className = className // Beállítja a className-t a div elemre
+        container.appendChild(this.#div) // Hozzáadja a div elemet a container elemhez
+    }
+
+    /**
+     * @returns {HTMLDivElement}
+     */
+    #getContainerDiv() { // Ez egy privát metódus, ami visszaadja a container elemet
         let container = document.querySelector('.containeroop') // Kiválasztja a containeroop elemet a DOM-ból
         if(!container) {    // Ha a container elem nem található, akkor létrehoz egy újat
             container = document.createElement('div') // Ha nem található, létrehoz egy új div elemet
             container.className = 'containeroop' // Beállítja a className-t a containeroop elemre
             document.body.appendChild(container) // Hozzáadja a body-hoz
         }
-        this.#div = document.createElement('div') // Létrehoz egy új div elemet
-        this.#div.className = className // Beállítja a className-t a div elemre
-        container.appendChild(this.#div) // Hozzáadja a div elemet a container elemhez
+        return container // Visszaadja a container elemet
     }
 }
 
@@ -35,6 +43,14 @@ class Table extends Area {
      */
     constructor(cssClass) { // Ez a konstruktor a Table osztályhoz tartozik, ami az Area osztályból származik
         super(cssClass) // Meghívja a szülő osztály konstruktorát
+        const tbody = this.#createTable() // Meghívja a #createTable metódust, ami létrehoz egy új táblázatot
+    }
+
+    /**
+     * 
+     * @returns {HTMLTableSectionElement}
+     */
+    #createTable() {    // Ez egy privát metódus, ami létrehoz egy új táblázatot
         const table = document.createElement('table') // Létrehoz egy új table elemet
         this.div.appendChild(table) // Hozzáadja a table elemet a div elemhez
         const thead = document.createElement('thead') // Létrehoz egy új thead elemet
@@ -49,6 +65,7 @@ class Table extends Area {
         }
         const tbody = document.createElement('tbody') // Létrehoz egy új tbody elemet
         table.appendChild(tbody) // Hozzáadja a tbody elemet a table elemhez
+        return tbody // Visszaadja a tbody elemet
     }
 }
 
@@ -56,24 +73,12 @@ class Form extends Area {
     /**
      * 
      * @param {cssClass} cssClass 
+     * @param {{ id: string, label: string }[]} elements
      */
-    constructor(cssClass) { // Ez a konstruktor a Form osztályhoz tartozik, ami az Area osztályból származik
+    constructor(cssClass, elements) { // Ez a konstruktor a Form osztályhoz tartozik, ami az Area osztályból származik
         super(cssClass) // Meghívja a szülő osztály konstruktorát
         const form = document.createElement('form') // Létrehoz egy új form elemet
         this.div.appendChild(form) // Hozzáadja a form elemet a div elemhez
-        const elements = [{ // Létrehoz egy tömböt az űrlap elemeivel
-            id: 'forradalom',   // Létrehoz egy új id elemet
-            label: 'forradalom',    // Létrehoz egy új label elemet
-        },
-        {
-            id: 'evszam',   // Létrehoz egy új id elemet
-            label: 'evszam',    // Létrehoz egy új label elemet
-        }, 
-        {
-            id: 'sikeres',  // Létrehoz egy új id elemet
-            label: 'sikeres',   // Létrehoz egy új label elemet
-        }]  // Létrehoz egy tömböt az űrlap elemeivel
-
         for(const element of elements) // Végigiterál az űrlap elemeinek tömbjén
         {
             const field = createDiv('field') // Létrehoz egy új div elemet a 'field' className-nel
