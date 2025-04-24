@@ -128,3 +128,41 @@ formSimple.addEventListener('submit', (e) => {  // Hozzáad egy eseményfigyelő
 
 container.appendChild(table)  // Hozzáadja a table divet a container divhez
 container.appendChild(form)  // Hozzáadja a form divet a container divhez
+
+const fileInput = document.createElement('input')  // Létrehoz egy új input elemet
+container.appendChild(fileInput)  // Hozzáadja a fileInput elemet a container divhez
+fileInput.id = 'fileinput' // Beállítja a fileInput id attribútumát 'fileinput'-ra
+fileInput.type = 'file'  // Beállítja a fileInput típusát 'file'-ra
+fileInput.addEventListener('change', (e) => {  // Hozzáad egy eseményfigyelőt a fileInput-hoz 
+    const file = e.target.files[0]  // Lekéri az első fájlt
+    const reader = new FileReader()  // Létrehoz egy új FileReader objektumot
+    reader.onload = (e) => {  // Hozzáad egy eseményfigyelőt a FileReader-hez
+        const lines = reader.result.split('\n')  // Felosztja a fájl tartalmát sorokra
+        const remove = lines.slice(1) // Eltávolítja az első sort (fejléc)
+        for(const line of remove) {  // Végigiterál a sorokon
+            const trimmed = line.trim()  // Levágja a sor elejéről és végéről a szóközöket
+            const fields = trimmed.split(';')  // Felosztja a sort mezőkre
+            const revolution = {
+                forradalom: fields[0],  // Beállítja a forradalom mezőt
+                evszam: fields[1],  // Beállítja az evszam mezőt
+                sikeres: fields[2]  // Beállítja a sikeres mezőt
+            }
+            array.push(revolution)  // Hozzáadja a forradalmat az array tömbhöz
+            const tr = document.createElement('tr')  // Létrehoz egy új tr elemet
+            tbody.appendChild(tr)  // Hozzáadja a tr elemet a tbody-hoz
+
+            const forradalomCell = document.createElement('td')  // Létrehoz egy új td elemet
+            forradalomCell.textContent = revolution.forradalom  // Beállítja a td szövegét az objektum forradalom mezőjére
+            tr.appendChild(forradalomCell)  // Hozzáadja a td elemet a tr elemhez
+
+            const evszamCell = document.createElement('td')  // Létrehoz egy új td elemet
+            evszamCell.textContent = revolution.evszam  // Beállítja a td szövegét az objektum evszam mezőjére
+            tr.appendChild(evszamCell)  // Hozzáadja a td elemet a tr elemhez
+
+            const sikeresCell = document.createElement('td')  // Létrehoz egy új td elemet
+            sikeresCell.textContent = revolution.sikeres  // Beállítja a td szövegét az objektum sikeres mezőjére
+            tr.appendChild(sikeresCell)  // Hozzáadja a td elemet a tr elemhez
+        }
+    }
+    reader.readAsText(file)  // Beolvassa a fájlt szövegként
+})
