@@ -33,4 +33,16 @@ class Manager {
         this.#array.push(revolution) // Hozzáadja a forradalmat a tömbhöz
         this.#addRevolutionCallback(revolution) // Meghívja a #addRevolutionCallback változót, és átadja neki a tömböt
     }
+
+    /**
+     * 
+     * @returns {Revolution[]} revolution
+     */
+    generateExportString(){
+        const result = ['forradalom,evszam,sikeres'] // Létrehoz egy új tömböt a fejlécnek
+        for (const revolution of this.#array) { // Végigmegy a tömbön
+            result.push(`${revolution.forradalom},${revolution.evszam},${revolution.sikeres}`) // Hozzáadja a forradalmat, az évet és a sikert a tömbhöz
+        }
+        return result.join('\n') // Visszaadja a tömböt egy stringként, új sorral elválasztva
+    }
 }

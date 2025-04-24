@@ -138,7 +138,7 @@ class Form extends Area {
                     valid = false // Beállítja a valid változót hamisra
                 }
                 if(formField.id === 'sikeres') { // Ha az elem id-ja 'sikeres'
-                    object[formField.id] = formField.value === 'igen' // Beállítja az objektum értékét a field.value változóra
+                    object[formField.id] = formField.value // Beállítja az objektum értékét a field.value változóra
                 } else {
                     object[formField.id] = formField.value // Beállítja az objektum értékét a field.value változóra
                 }
@@ -151,7 +151,7 @@ class Form extends Area {
     }
 }
 
-class Upload extends Area {
+class UploadDownload extends Area {
     /**
      * 
      * @param {cssClass} cssClass 
@@ -177,6 +177,19 @@ class Upload extends Area {
                 }
             }
             reader.readAsText(file)  // Beolvassa a fájlt szövegként
+        })
+
+        const download = document.createElement('button')  // Létrehoz egy új button elemet
+        download.textContent = 'Letöltés'  // Beállítja a button szövegét
+        this.div.appendChild(download)  // Hozzáadja a button elemet a div elemhez
+        download.addEventListener('click', () => {  // Hozzáad egy eseményfigyelőt a button-hoz
+            const link = document.createElement('a')  // Létrehoz egy új a elemet
+            const content = this.manager.generateExportString()  // Meghívja a generateExportString metódust, ami visszaadja a fájl tartalmát
+            const file = new Blob([content])  // Létrehoz egy új Blob objektumot a fájl tartalmával
+            link.href = URL.createObjectURL(file)  // Beállítja a link href attribútumát a Blob objektumra
+            link.download = 'newdata.csv'  // Beállítja a link letöltési nevét
+            link.click()  // Kattint a linkre, hogy letöltse a fájlt
+            URL.revokeObjectURL(link.href)  // Visszavonja a Blob objektum URL-jét
         })
     }
 }
