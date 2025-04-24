@@ -102,6 +102,11 @@ class Table extends Area {
 
 class Form extends Area {
     /**
+     * @type {FormField[]}
+     */
+    #formFieldArray // Ez egy privát változó, ami a form elemek tömbjét tárolja
+    
+    /**
      * 
      * @param {cssClass} cssClass 
      * @param {{ id: string, label: string }[]} elements
@@ -109,38 +114,14 @@ class Form extends Area {
      */
     constructor(cssClass, elements, manager) { // Ez a konstruktor a Form osztályhoz tartozik, ami az Area osztályból származik
         super(cssClass, manager) // Meghívja a szülő osztály konstruktorát
+        this.#formFieldArray = [] // Inicializálja a formFieldArray tömböt
         const form = document.createElement('form') // Létrehoz egy új form elemet
         this.div.appendChild(form) // Hozzáadja a form elemet a div elemhez
         for(const element of elements) // Végigiterál az űrlap elemeinek tömbjén
         {
-            const field = createDiv('field') // Létrehoz egy új div elemet a 'field' className-nel
-            form.appendChild(field) // Hozzáadja a field elemet a form elemhez
-            const label = document.createElement('label') // Létrehoz egy új label elemet
-            label.htmlFor = element.id // Beállítja a label htmlFor attribútumát az element.id változóra
-            label.textContent = element.label // Beállítja a label szövegét az element.label változóra
-            field.appendChild(label) // Hozzáadja a label elemet a field elemhez
-            if (element.id === 'sikeres') {  // Ha az elem id-ja 'sikeres'
-                const select = document.createElement('select')  // Létrehoz egy új select elemet
-                select.id = element.id  // Beállítja a select id attribútumát az element.id változóra
-        
-                const optionYes = document.createElement('option')  // Létrehoz egy új option elemet
-                optionYes.value = 'igen'  // Beállítja az option értékét
-                optionYes.textContent = 'Igen'  // Beállítja az option szövegét
-                select.appendChild(optionYes)  // Hozzáadja az option elemet a select-hez
-        
-                const optionNo = document.createElement('option')  // Létrehoz egy új option elemet
-                optionNo.value = 'nem'  // Beállítja az option értékét
-                optionNo.textContent = 'Nem'  // Beállítja az option szövegét
-                select.appendChild(optionNo)  // Hozzáadja az option elemet a select-hez
-        
-                field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
-                field.appendChild(select)  // Hozzáadja a select elemet a field-hez
-            } else {
-                const input = document.createElement('input')  // Létrehoz egy új input elemet
-                input.id = element.id  // Beállítja az input id attribútumát az element.id változóra
-                field.appendChild(document.createElement('br'))  // Hozzáad egy új br elemet a field elemhez
-                field.appendChild(input)  // Hozzáadja az input elemet a field-hez
-            }
+            const formField = new FormField(element.id, element.label) // Létrehoz egy új FormField elemet
+            this.#formFieldArray.push(formField) // Hozzáadja a formField elemet a formFieldArray tömbhöz
+            form.appendChild(formField.getDiv()) // Hozzáadja a formField elemet a form elemhez
         }
 
         const button = document.createElement('button') // Létrehoz egy új button elemet
@@ -160,5 +141,95 @@ class Form extends Area {
             const revolution = new Revolution(object.forradalom, object.evszam, object.sikeres) // Létrehoz egy új Revolution objektumot
             this.manager.AddRevolution(revolution) // Hozzáadja a forradalmat a manager-hez
         })
+    }
+}
+
+class FormField {
+    /**
+     * @type {string}
+     */
+    #id // Ez egy privát változó, ami az id-t tárolja
+    /**
+     * @type {HTMLInputElement}
+     */
+    #input // Ez egy privát változó, ami a input-t tárolja
+    /**
+     * @type {HTMLLabelElement}
+     */
+    #label // Ez egy privát változó, ami a label-t tárolja
+    /**
+     * @type {HTMLSelectElement}
+     */
+    #select // Ez egy privát változó, ami a select-t tárolja
+    /**
+     * @type {HTMLSpanElement}
+     */
+    #error // Ez egy privát változó, ami a error-t tárolja
+
+    /**
+     * @returns {string}
+     */
+    get id() { // Ez egy getter, ami visszaadja a #id változót
+        return this.#id // Visszaadja a #id változót
+    }
+
+    /**
+     * @returns {string} value
+     */
+    get value() { // Ez egy getter, ami visszaadja a #input.value változót
+        return this.#input.value // Visszaadja a #input.value változót
+    }
+
+    /**
+     * @param {string} value
+     */
+    set error(value) { // Ez egy setter, ami beállítja a #error változót
+        this.#error.textContent = value // Beállítja a #error szövegét a value változóra
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} content 
+     */
+    constructor(id, content) { // Ez a konstruktor a FormField osztályhoz tartozik 
+        this.#id = id // Beállítja a #id változót
+        this.#label = document.createElement('label') // Létrehoz egy új label elemet
+        this.#label.htmlFor = id // Beállítja a label htmlFor attribútumát az id változóra
+        this.#label.textContent = content // Beállítja a label szövegét a content változóra
+        this.#error = document.createElement('span') // Létrehoz egy új span elemet
+        this.#error.className = 'error' // Beállítja a span className-jét az error változóra
+
+        if (id === 'sikeres') { // Ha az id 'sikeres'
+            this.#input = document.createElement('select') // Létrehoz egy új select elemet
+            this.#input.id = id // Beállítja a select id attribútumát az id változóra
+
+            const optionYes = document.createElement('option') // Létrehoz egy új option elemet
+            optionYes.value = 'igen' // Beállítja az option értékét
+            optionYes.textContent = 'Igen' // Beállítja az option szövegét
+            this.#input.appendChild(optionYes) // Hozzáadja az option elemet a select-hez
+
+            const optionNo = document.createElement('option') // Létrehoz egy új option elemet
+            optionNo.value = 'nem' // Beállítja az option értékét
+            optionNo.textContent = 'Nem' // Beállítja az option szövegét
+            this.#input.appendChild(optionNo) // Hozzáadja az option elemet a select-hez
+        } else {
+            this.#input = document.createElement('input') // Létrehoz egy új input elemet
+            this.#input.id = id // Beállítja az input id attribútumát az id változóra
+        }
+    }
+
+    /**
+     * @returns {HTMLDivElement} div
+     */
+    getDiv() { // Ez egy getter, ami visszaadja a #div változót
+        const div = createDiv('field') // Létrehoz egy új div elemet
+        const br1 = document.createElement('br') // Létrehoz egy új br elemet
+        const br2 = document.createElement('br') // Létrehoz egy új br elemet
+        const htmlElements = [this.#label, br1, this.#input, br2, this.#error] // Létrehoz egy tömböt a html elemekkel
+        for(const element of htmlElements) { // Végigiterál a html elemek tömbjén
+            div.appendChild(element) // Hozzáadja az elemet a div elemhez
+        }
+        return div // Visszaadja a div elemet
     }
 }
