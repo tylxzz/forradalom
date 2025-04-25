@@ -90,10 +90,10 @@ class Table extends Area {
 
     /**
      * 
-     * @param {Revolution} revolution 
+     * @param {HTMLTableSectionElement} tbody 
      * @returns {(revolution: Revolution) => void}  
      */
-    #addRevolutionCallback(revolution) { // Ez a metódus hozzáad egy új forradalmat a táblázathoz
+    #addRevolutionCallback(tbody) { // Ez a metódus hozzáad egy új forradalmat a táblázathoz
         return (revolution) => { // Visszaad egy függvényt, ami a forradalmat várja
             this.#createRevolutionRow(revolution, tbody) // Meghívja a #createRevolutionRow metódust, ami létrehoz egy új forradalom sort
         }
