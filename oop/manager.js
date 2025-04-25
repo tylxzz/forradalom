@@ -9,7 +9,7 @@ class Manager {
      */
     #array 
     /**
-     * @type {RevolutionCallback}
+     * @type {RevolutionCallback} addRevolutionCallback
      */
     #addRevolutionCallback
     /**
@@ -52,6 +52,20 @@ class Manager {
      */
     getRevolutions() { // Visszaadja a forradalmak tömbjét
         return this.#array
+    }
+
+    /**
+     * @param {(revolution: Revolution) => boolean} callback
+     * @returns {number} count
+     */
+    countByCondition(callback) {
+        let count = 0 // Inicializálja a találatok számát
+        for (const revolution of this.#array) { // Végigmegy a forradalmak tömbjén
+            if (callback(revolution)) { // Ha a callback igazat ad vissza
+                count++ // Növeli a találatok számát
+            }
+        }
+        return count // Visszaadja a találatok számát
     }
 
     /**

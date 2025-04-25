@@ -4,7 +4,7 @@ class Filter extends Area {
      * @param {cssClass} cssClass 
      * @param {Manager} manager 
      */
-    constructor(cssClass, manager) {    // Konstruktor, amely a Filter osztályhoz tartozik
+    constructor(cssClass, manager) {
         super(cssClass, manager) // Meghívja az Area osztály konstruktorát
 
         const filterForm = createDiv('filterForm') // Létrehoz egy div-et a filterForm osztállyal
@@ -16,7 +16,7 @@ class Filter extends Area {
         const select = document.createElement('select') // Létrehoz egy select elemet
         formForFilter.appendChild(select) // Hozzáadja a select elemet a form-hoz
 
-        const options = [   // Létrehoz egy tömböt az opciókkal
+        const options = [
             { value: '', innerText: '' }, // Üres opció
             { value: 'forradalom', innerText: 'forradalom' }, // Forradalom opció
             { value: 'evszam', innerText: 'évszám' }, // Évszám opció
@@ -39,7 +39,6 @@ class Filter extends Area {
         filterButton.innerText = 'Szűrés' // Beállítja a button szövegét
         formForFilter.appendChild(filterButton) // Hozzáadja a button elemet a form-hoz
 
-
         const resultDiv = createDiv('result') // Létrehoz egy div-et a result osztállyal
         this.div.appendChild(resultDiv) // Hozzáadja a result div-et a fő div-hez
 
@@ -48,23 +47,32 @@ class Filter extends Area {
 
             const filterValue = filterInput.value.trim().toLowerCase() // Lekéri és kisbetűssé alakítja a beviteli mező értékét
             const filterColumn = select.value // Lekéri a lenyíló menüben kiválasztott oszlopot
-
-            let count = 0 // Inicializálja a találatok számát
-
-            for (const revolution of manager.getRevolutions()) {    // Végigmegy a forradalmak tömbjén
-                if (filterColumn === '') { // Ha az oszlop üres, minden elemet számol
-                    count++
-                } else if (filterColumn === 'forradalom' && revolution.forradalom.toLowerCase().includes(filterValue)) {
-                    count++ // Ha a forradalom oszlop tartalmazza a keresett értéket, növeli a találatok számát
-                } else if (filterColumn === 'evszam' && revolution.evszam.toString().includes(filterValue)) {
-                    count++ // Ha az évszám oszlop tartalmazza a keresett értéket, növeli a találatok számát
-                } else if (filterColumn === 'sikeres') {
-                    const sikeresValue = revolution.sikeres ? 'igen' : 'nem' // Átalakítja a boolean értéket 'igen' vagy 'nem' szöveggé
-                    if (sikeresValue.includes(filterValue)) {
-                        count++ // Ha a sikeres oszlop tartalmazza a keresett értéket, növeli a találatok számát
-                    }
+            
+            const count = manager.countByCondition((revolution) => { 
+                // Ha a lenyíló menüben nincs kiválasztva oszlop (üres), minden elemet számol
+                if (filterColumn === '') { 
+                    return true // Minden elem megfelel
+                } 
+                // Ha a "forradalom" oszlop van kiválasztva
+                else if (filterColumn === 'forradalom') {
+                    // Ellenőrzi, hogy a forradalom neve tartalmazza-e a beírt szöveget (kisbetűs összehasonlítás)
+                    return revolution.forradalom.toLowerCase().includes(filterValue)
+                } 
+                // Ha az "évszám" oszlop van kiválasztva
+                else if (filterColumn === 'evszam') {
+                    // Ellenőrzi, hogy az évszám tartalmazza-e a beírt szöveget (számot szöveggé alakítva)
+                    return revolution.evszam.toString().includes(filterValue)
+                } 
+                // Ha a "sikeres" oszlop van kiválasztva
+                else if (filterColumn === 'sikeres') {
+                    // Átalakítja a boolean értéket ('true' vagy 'false') "igen" vagy "nem" szöveggé
+                    const sikeresValue = revolution.sikeres ? 'igen' : 'nem'
+                    // Ellenőrzi, hogy a "sikeres" mező tartalmazza-e a beírt szöveget
+                    return sikeresValue.includes(filterValue)
                 }
-            }
+                // Ha egyik feltétel sem teljesül, az elem nem felel meg
+                return false
+            })
 
             resultDiv.textContent = `Szűrés: ${count}` // Beállítja az eredmény szövegét
         })

@@ -2,7 +2,7 @@
  * @typedef {{forradalom: string, evszam: number, sikeres: boolean}} Revolution
  * 
  * @callback RevCallback
- * @param {Rev[]} rev
+ * @param {Revolution[]} revolution
  * @returns {void}
  */
 
@@ -46,7 +46,7 @@ const createTable = (container, callback) => {  // Ez egy arrow function, ami l�
  * 
  * @param {HTMLTableSectionElement} tbody 
  * @param {HTMLDivElement} container 
- * @param {Rev[]} revArray 
+ * @param {Revolution[]} revArray 
  */
 const createFileUpload = (tbody, container, revArray) => {  // Ez egy arrow function, ami létrehoz egy fájl feltöltő elemet a megadott container-ben
     const fileInput = document.createElement('input')  // Létrehoz egy új input elemet
@@ -79,7 +79,7 @@ const createFileUpload = (tbody, container, revArray) => {  // Ez egy arrow func
  * 
  * @param {HTMLTableSectionElement} tbody 
  * @param {HTMLDivElement} container 
- * @param {Rev[]} revArray 
+ * @param {Revolution[]} revArray 
  */
 const createForm = (tbody, container, revArray) => {  // Ez egy arrow function, ami létrehoz egy űrlapot a megadott container-ben
     const form = createDiv('form') // Létrehoz egy új div elemet a 'form' className-nel
@@ -170,7 +170,7 @@ const createForm = (tbody, container, revArray) => {  // Ez egy arrow function, 
 
 /**
  * 
- * @param {Rev} object 
+ * @param {Revolution} object 
  * @param {HTMLTableSectionElement} tbody 
  */
 const addRow = (object, tbody) => {  // Ez egy arrow function, ami hozzáad egy új sort a táblázathoz
@@ -193,7 +193,7 @@ const addRow = (object, tbody) => {  // Ez egy arrow function, ami hozzáad egy 
 /**
  * 
  * @param {HTMLDivElement} container 
- * @param {Rev[]} revArray 
+ * @param {Revolution[]} revArray 
  */
 const createFileDownload = (container, revArray) => {  // Ez egy arrow function, ami létrehoz egy fájl letöltő elemet a megadott container-ben
     const download = document.createElement('button')  // Létrehoz egy új button elemet

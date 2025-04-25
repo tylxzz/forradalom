@@ -211,7 +211,7 @@ class Form extends Area {
 
     /**
      * 
-     * @returns {{ [key: string]: string }} object
+     * @returns {Revolution} object
      */
     #getObject() { // Ez egy privát metódus, ami visszaadja az objektumot
         const object = {} // Létrehoz egy új objektumot
