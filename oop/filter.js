@@ -1,4 +1,9 @@
 class Filter extends Area {
+    /**
+     * 
+     * @param {cssClass} cssClass 
+     * @param {Manager} manager 
+     */
     constructor(cssClass, manager) {    // Konstruktor, amely a Filter osztályhoz tartozik
         super(cssClass, manager) // Meghívja az Area osztály konstruktorát
 

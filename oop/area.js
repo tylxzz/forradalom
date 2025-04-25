@@ -48,6 +48,17 @@ class Area {
         }
         return container // Visszaadja a container elemet
     }
+
+    /**
+     * 
+     * @param {HTMLLabelElementq} label 
+     * @returns {HTMLButtonElement} button
+     */
+    createButton(label) {   // Ez a metódus létrehoz egy új gombot
+        const button = document.createElement('button') // Létrehoz egy új button elemet
+        button.textContent = label // Beállítja a button szövegét
+        return button // Visszaadja a button elemet
+    }
 }
 
 class Table extends Area {
@@ -59,9 +70,33 @@ class Table extends Area {
     constructor(cssClass, manager) { // Ez a konstruktor a Table osztályhoz tartozik, ami az Area osztályból származik
         super(cssClass, manager) // Meghívja a szülő osztály konstruktorát
         const tbody = this.#createTable() // Meghívja a #createTable metódust, ami létrehoz egy új táblázatot
-        this.manager.setAddRevolutionCallback((revolution) => { // Beállítja a #addRevolutionCallback változót
+        this.manager.setAddRevolutionCallback(this.#addRevolutionCallback(tbody)) // Beállítja a #addRevolutionCallback változót, ami hozzáad egy új forradalmat a táblázathoz
+        this.manager.setRenderTableCallback(this.#renderTableCallback(tbody)) // Beállítja a #renderTableCallback változót, ami rendereli a táblázatot
+    }
+
+    /**
+     * 
+     * @param {HTMLTableSectionElement} tbody 
+     * @returns {(array: Revolution[]) => void}
+     */
+    #renderTableCallback(tbody) { // Ez a metódus rendereli a táblázatot
+        return (array) => { // Visszaad egy függvényt, ami a forradalmak tömbjét várja
+            tbody.innerHTML = '' // Törli a tbody tartalmát
+            for(const revolution of array) { // Végigiterál a forradalmak tömbjén
+                this.#createRevolutionRow(revolution, tbody) // Meghívja a #createRevolutionRow metódust, ami létrehoz egy új forradalom sort
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param {Revolution} revolution 
+     * @returns {(revolution: Revolution) => void}  
+     */
+    #addRevolutionCallback(revolution) { // Ez a metódus hozzáad egy új forradalmat a táblázathoz
+        return (revolution) => { // Visszaad egy függvényt, ami a forradalmat várja
             this.#createRevolutionRow(revolution, tbody) // Meghívja a #createRevolutionRow metódust, ami létrehoz egy új forradalom sort
-        })
+        }
     }
 
     /**
@@ -71,19 +106,16 @@ class Table extends Area {
      */
     #createRevolutionRow(revolution, tbody) { // Ez egy privát metódus, ami létrehoz egy új forradalom sort
         const tr = document.createElement('tr') // Létrehoz egy új tr elemet
-            tbody.appendChild(tr) // Hozzáadja a tr elemet a tbody elemhez
+        this.#createCell(tr, revolution.forradalom) // Meghívja a #createCell metódust, ami létrehoz egy új cellát a forradalom nevével
+        this.#createCell(tr, revolution.evszam) // Meghívja a #createCell metódust, ami létrehoz egy új cellát az évszámmal
+        this.#createCell(tr, revolution.sikeres) // Meghívja a #createCell metódust, ami létrehoz egy új cellát a sikerességgel
+        tbody.appendChild(tr) // Hozzáadja a tr elemet a tbody elemhez
+    }
 
-            const forradalomCell = document.createElement('td') // Létrehoz egy új td elemet
-            forradalomCell.innerText = revolution.forradalom // Beállítja a td szövegét a forradalom változóra
-            tr.appendChild(forradalomCell) // Hozzáadja a td elemet a tr elemhez
-            
-            const evszamCell = document.createElement('td') // Létrehoz egy új td elemet
-            evszamCell.innerText = revolution.evszam // Beállítja a td szövegét az evszam változóra
-            tr.appendChild(evszamCell) // Hozzáadja a td elemet a tr elemhez
-
-            const sikeresCell = document.createElement('td') // Létrehoz egy új td elemet
-            sikeresCell.innerText = revolution.sikeres ? 'igen' : 'nem' // Beállítja a td szövegét a sikeres változóra
-            tr.appendChild(sikeresCell) // Hozzáadja a td elemet a tr elemhez
+    #createCell(row, textContent, type='td') {
+        const cell = document.createElement(type) // Létrehoz egy új td elemet
+        cell.innerText = textContent // Beállítja a cella szövegét a textContent változóra
+        row.appendChild(cell) // Hozzáadja a cellát a row elemhez
     }
 
     /**
@@ -99,9 +131,7 @@ class Table extends Area {
         thead.appendChild(tr) // Hozzáadja a tr elemet a thead elemhez
         const theadCells = ['forradalom', 'evszam', 'sikeres'] // Létrehoz egy tömböt a thead cellák nevével
         for(const content of theadCells) { // Végigiterál a thead cellák tömbjén
-            const cell = document.createElement('th') // Létrehoz egy új th elemet
-            cell.innerText = content // Beállítja a cella szövegét a content változóra
-            tr.appendChild(cell) // Hozzáadja a cellát a tr elemhez
+            this.#createCell(tr, content, 'th') // Meghívja a #createCell metódust, ami létrehoz egy új cellát a thead-hez
         }
         const tbody = document.createElement('tbody') // Létrehoz egy új tbody elemet
         table.appendChild(tbody) // Hozzáadja a tbody elemet a table elemhez
@@ -124,40 +154,72 @@ class Form extends Area {
     constructor(cssClass, elements, manager) { // Ez a konstruktor a Form osztályhoz tartozik, ami az Area osztályból származik
         super(cssClass, manager) // Meghívja a szülő osztály konstruktorát
         this.#formFieldArray = [] // Inicializálja a formFieldArray tömböt
+        const form = this.#createForm(elements) // Meghívja a #createForm metódust, ami létrehoz egy új form elemet
+        form.addEventListener('submit', this.#formsubmit()) // Hozzáad egy eseményfigyelőt a form-hoz, ami meghívja a #formsubmit metódust
+    }
+
+    /**
+     * 
+     * @param {{ id: string, label: string }[]} fieldElements 
+     * @returns {HTMLFormElement} form
+     */
+    #createForm(fieldElements) {    // Ez egy privát metódus, ami létrehoz egy új form elemet
         const form = document.createElement('form') // Létrehoz egy új form elemet
         this.div.appendChild(form) // Hozzáadja a form elemet a div elemhez
-        for(const element of elements) // Végigiterál az űrlap elemeinek tömbjén
-        {
+        for(const element of fieldElements) { // Végigiterál az űrlap elemeinek tömbjén
             const formField = new FormField(element.id, element.label) // Létrehoz egy új FormField elemet
             this.#formFieldArray.push(formField) // Hozzáadja a formField elemet a formFieldArray tömbhöz
             form.appendChild(formField.getDiv()) // Hozzáadja a formField elemet a form elemhez
         }
-
-        const button = document.createElement('button') // Létrehoz egy új button elemet
-        button.textContent = 'Hozzáadás' // Beállítja a button szövegét
+        const button = this.createButton('Hozzáadás') // Létrehoz egy új button elemet
         form.appendChild(button) // Hozzáadja a button elemet a form elemhez
-        form.addEventListener('submit', (e) => { // Hozzáad egy eseményfigyelőt a form elemhez
+
+        return form // Visszaadja a form elemet
+
+    }
+
+    /**
+     * 
+     * @returns {(e: Event) => void}
+     */
+    #formsubmit() {
+        return (e) => { // Visszaad egy függvényt, ami a form elemet várja
             e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
-            const object = {} // Létrehoz egy új objektumot
-            let valid = true // Inicializálja a valid változót
-            for(const formField of this.#formFieldArray) { // Végigiterál a formFieldArray tömbön
-                formField.error = '' // Beállítja a formField error változóját üresre
-                if(formField.value === '') { // Ha a formField értéke üres
-                    formField.error = 'Kötelező mező!' // Beállítja a formField error változóját
-                    valid = false // Beállítja a valid változót hamisra
-                }
-                if(formField.id === 'sikeres') { // Ha az elem id-ja 'sikeres'
-                    object[formField.id] = formField.value // Beállítja az objektum értékét a field.value változóra
-                } else {
-                    object[formField.id] = formField.value // Beállítja az objektum értékét a field.value változóra
-                }
-            }
-            if(valid) { // Ha a valid változó igaz
+            if(this.#validate()) { // Meghívja a #validate metódust, ami ellenőrzi az űrlap mezőit
+                const object = this.#getObject() // Meghívja a #getObject metódust, ami visszaadja az objektumot
                 const revolution = new Revolution(object.forradalom, object.evszam, object.sikeres) // Létrehoz egy új Revolution objektumot
                 this.manager.AddRevolution(revolution) // Hozzáadja a forradalmat a manager-hez
             }
-        })
+        }
     }
+
+    /**
+     * 
+     * @returns {boolean} valid
+     */
+    #validate() { // Ez egy privát metódus, ami ellenőrzi az űrlap mezőit
+        let valid = true // Inicializálja a valid változót
+        for(const formField of this.#formFieldArray) { // Végigiterál a formFieldArray tömbön
+            formField.error = '' // Beállítja a formField error változóját üresre
+            if(formField.value === '') { // Ha a formField értéke üres
+                formField.error = 'Kötelező mező!' // Beállítja a formField error változóját
+                valid = false // Beállítja a valid változót hamisra
+            }
+        }
+        return valid // Visszaadja a valid változót
+    }
+
+    /**
+     * 
+     * @returns {{ [key: string]: string }} object
+     */
+    #getObject() { // Ez egy privát metódus, ami visszaadja az objektumot
+        const object = {} // Létrehoz egy új objektumot
+        for(const formField of this.#formFieldArray) { // Végigiterál a formFieldArray tömbön
+            object[formField.id] = formField.value // Beállítja az objektum értékét a field.value változóra
+        }
+        return object // Visszaadja az objektumot
+    }   
 }
 
 class UploadDownload extends Area {
@@ -172,7 +234,33 @@ class UploadDownload extends Area {
         input.id = 'fileinput' // Beállítja az input típusát fájlra
         input.type = 'file'  // Beállítja a fileInput típusát 'file'-ra
         this.div.appendChild(input) // Hozzáadja a fileInput elemet a div elemhez
-        input.addEventListener('change', (e) => {  // Hozzáad egy eseményfigyelőt a fileInput-hoz 
+        input.addEventListener('change', this.#import()) // Hozzaad egy eseményfigyelőt az input-hoz, ami akkor fut le, amikor a felhasználó rákattint
+        const button = this.createButton('Letöltés') // Letrehoz egy button elemet
+        button.addEventListener('click', this.#export()) // Hozzaad egy eseményfigyelőt a button-hoz, ami akkor fut le, amikor a felhasználó rákattint
+    }
+
+    /**
+     * 
+     * @returns {(e: Event) => void}
+     */
+    #export() { // Ez egy privát metódus, ami exportálja a fájlt
+        return () => {
+            const link = document.createElement('a')  // Létrehoz egy új a elemet
+            const content = this.manager.generateExportString()  // Meghívja a generateExportString metódust, ami visszaadja a fájl tartalmát
+            const file = new Blob([content])  // Létrehoz egy új Blob objektumot a fájl tartalmával
+            link.href = URL.createObjectURL(file)  // Beállítja a link href attribútumát a Blob objektumra
+            link.download = 'newdata.csv'  // Beállítja a link letöltési nevét
+            link.click()  // Kattint a linkre, hogy letöltse a fájlt
+            URL.revokeObjectURL(link.href)  // Visszavonja a Blob objektum URL-jét
+        }
+    }
+
+    /**
+     * 
+     * @returns {(e: Event) => void}
+     */
+    #import() { // Ez egy privát metódus, ami importálja a fájlt
+        return (e) => {
             const file = e.target.files[0]  // Lekéri az első fájlt
             const reader = new FileReader()  // Létrehoz egy új FileReader objektumot
             reader.onload = () => {  // Hozzáad egy eseményfigyelőt a FileReader-hez
@@ -186,20 +274,7 @@ class UploadDownload extends Area {
                 }
             }
             reader.readAsText(file)  // Beolvassa a fájlt szövegként
-        })
-
-        const download = document.createElement('button')  // Létrehoz egy új button elemet
-        download.textContent = 'Letöltés'  // Beállítja a button szövegét
-        this.div.appendChild(download)  // Hozzáadja a button elemet a div elemhez
-        download.addEventListener('click', () => {  // Hozzáad egy eseményfigyelőt a button-hoz
-            const link = document.createElement('a')  // Létrehoz egy új a elemet
-            const content = this.manager.generateExportString()  // Meghívja a generateExportString metódust, ami visszaadja a fájl tartalmát
-            const file = new Blob([content])  // Létrehoz egy új Blob objektumot a fájl tartalmával
-            link.href = URL.createObjectURL(file)  // Beállítja a link href attribútumát a Blob objektumra
-            link.download = 'newdata.csv'  // Beállítja a link letöltési nevét
-            link.click()  // Kattint a linkre, hogy letöltse a fájlt
-            URL.revokeObjectURL(link.href)  // Visszavonja a Blob objektum URL-jét
-        })
+        }
     }
 }
 

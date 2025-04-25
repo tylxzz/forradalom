@@ -9,7 +9,7 @@
 /**
  * 
  * @param {string} className 
- * @returns {HTMLDivElement}
+ * @returns {HTMLDivElement} div
  */
 const createDiv = (className) => {  // Ez egy arrow function, ami egy div elemet hoz létre a megadott className-nel
     const div = document.createElement('div')   // Létrehoz egy új div elemet

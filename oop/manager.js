@@ -13,7 +13,7 @@ class Manager {
      */
     #addRevolutionCallback
     /**
-     * @type {RevolutionCallback}
+     * @type {RevolutionCallback} renderTableCallback
      */
     #renderTableCallback // Ez a változó a táblázat renderelésére szolgál
 
@@ -56,7 +56,7 @@ class Manager {
 
     /**
      * 
-     * @returns {Revolution[]} revolution
+     * @returns {string} revolution
      */
     generateExportString(){
         const result = ['forradalom,evszam,sikeres'] // Létrehoz egy új tömböt a fejlécnek
