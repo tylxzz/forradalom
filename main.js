@@ -1,3 +1,11 @@
+/**
+ * @typedef {{forradalom: string, evszam: number, sikeres: boolean}} Revolution
+ * 
+ * @callback RevCallback
+ * @param {Rev[]} rev
+ * @returns {void}
+ */
+
 const array = [] // Létrehoz egy üres tömböt
 
 /**
@@ -9,6 +17,23 @@ const createDiv = (className) => {  // Ez egy arrow function, ami egy div elemet
     const div = document.createElement('div')   // Létrehoz egy új div elemet
     div.className = className   // Beállítja a className-t a div elemre
     return div  // Visszaadja a létrehozott div elemet
+}
+
+/**
+ * 
+ * @param {Rev[]} revArray 
+ * @param {RevCallback} callback 
+ * @returns {Rev[]} result
+ */
+const filter = (revArray, callback) => {    // Ez egy arrow function, ami egy új tömböt hoz létre a megadott callback függvény alapján
+    const result = []  // Létrehoz egy új üres tömböt
+    for(const rev of revArray) {  // Végigiterál a revArray tömbön
+        if(callback(rev)) {  // Ha a callback függvény igazat ad vissza
+            result.push(rev)  // Hozzáadja az elemet az új tömbhöz
+        }
+    }
+    return result  // Visszaadja az új tömböt
+
 }
 
 const container = createDiv('container')  // Létrehoz egy új div elemet a 'container' className-nel
@@ -182,4 +207,56 @@ download.addEventListener('click', () => {  // Hozzáad egy eseményfigyelőt a 
     link.download = 'newdata.csv'  // Beállítja a link letöltési nevét
     link.click()  // Kattint a linkre, hogy letöltse a fájlt
     URL.revokeObjectURL(link.href)  // Visszavonja a Blob objektum URL-jét
+})
+
+const filterForm = createDiv('filterForm') //filterFormDiv létrehozása, aminek a filterForm lesz a classa
+container.appendChild(filterForm) //filterFormDiv hozzáadása a containerDivhez
+const formForFilter = document.createElement('form'); //form létrehozása
+filterForm.appendChild(formForFilter) //formForFilter hozzáadása a filterFormDivhez
+const select = document.createElement('select') //legördülő lista létrehozása
+formForFilter.appendChild(select) //select hozzáadása a formForFilterhez
+const options = [{ //tömb létrehozása, benne objektummal
+    value: '', //lista 1.értéke
+    innerText: '' //szövege: üres
+},
+{
+    value: 'forradalom', //lista 2.értéke
+    innerText: 'forradalom' //szövege: forradalom
+},
+{
+    value: 'evszam', //lista 3.értéke
+    innerText: 'évszám' //szövege: évszám
+},
+{
+    value: 'sikeres', //lista 4.értéke
+    innerText: 'sikeres' //szövege: sikeres
+}]
+for(const option of options){ //options tömb bejárása
+    const element = document.createElement('option') //optionElement létrehozása
+    element.value = option.value //érték beállítása
+    element.innerText = option.innerText //megjelenő szöveg beállítása
+    select.appendChild(element) //optionElement hozzáadása a selecthez
+}
+
+const filterInput = document.createElement('input'); //input létrehozása
+filterInput.id = 'filterInput' //filterInputField idje filterInput lesz
+formForFilter.appendChild(filterInput) //filterInputField hozzáadása a formForFilterhez
+
+const filterButton = document.createElement('button'); //új gomb létrehozása
+filterButton.innerText = 'Szűrés' //gomb szövege a Szűrés lesz
+formForFilter.appendChild(filterButton) //button hozzáadása a formForFilterhez
+formForFilter.addEventListener('submit', (e) => { //eseménykezelő létrehozása a formForFilter submit eseményére
+    e.preventDefault() //az oldal újra frissülésének megakadályozása
+    let counter = 0; //számláló létrehozása
+    for(const element of array) { //array bejárása
+        if(element[select.value].toLowerCase().includes(filterInput.value.toLowerCase())) { //ha az adott mező tartalmazza a keresett értéket
+            counter++ //számláló növelése
+        }
+    }
+    let result = formForFilter.querySelector('.result') //result classal rendelkező elem eltárolása egy változóban
+    if(!result) { //ha a result még nem létezik
+        result = createDiv('result') //új div elem létrehozása, amelynek az osztálya a result
+        formForFilter.appendChild(result) //result hozzáadása a formForFilterhez
+    }
+    result.innerHTML = `Szűrés: ${counter}` //result tartalmának beállítása
 })
