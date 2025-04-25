@@ -35,14 +35,6 @@ class Manager {
     }
 
     /**
-     * 
-     * @returns {Revolution[]} revolution
-     */
-    getRevolutions() { // Visszaadja a forradalmak tömbjét
-        return this.#array
-    }
-
-    /**
      * @param {(revolution: Revolution) => boolean} callback
      * @returns {number} count
      */
