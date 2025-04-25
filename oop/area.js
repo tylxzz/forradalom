@@ -71,21 +71,6 @@ class Table extends Area {
         super(cssClass, manager) // Meghívja a szülő osztály konstruktorát
         const tbody = this.#createTable() // Meghívja a #createTable metódust, ami létrehoz egy új táblázatot
         this.manager.setAddRevolutionCallback(this.#addRevolutionCallback(tbody)) // Beállítja a #addRevolutionCallback változót, ami hozzáad egy új forradalmat a táblázathoz
-        this.manager.setRenderTableCallback(this.#renderTableCallback(tbody)) // Beállítja a #renderTableCallback változót, ami rendereli a táblázatot
-    }
-
-    /**
-     * 
-     * @param {HTMLTableSectionElement} tbody 
-     * @returns {(array: Revolution[]) => void}
-     */
-    #renderTableCallback(tbody) { // Ez a metódus rendereli a táblázatot
-        return (array) => { // Visszaad egy függvényt, ami a forradalmak tömbjét várja
-            tbody.innerHTML = '' // Törli a tbody tartalmát
-            for(const revolution of array) { // Végigiterál a forradalmak tömbjén
-                this.#createRevolutionRow(revolution, tbody) // Meghívja a #createRevolutionRow metódust, ami létrehoz egy új forradalom sort
-            }
-        }
     }
 
     /**

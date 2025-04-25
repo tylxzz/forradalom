@@ -1,6 +1,6 @@
 /** 
- * @callback RevolutionCallback
- * @param {Revolution[]} revolutions
+ * @callback addRevolutionCallback
+ * @param {Revolution} revolution
  * @returns {void}
  */
 class Manager {
@@ -9,13 +9,9 @@ class Manager {
      */
     #array 
     /**
-     * @type {RevolutionCallback} addRevolutionCallback
+     * @type {addRevolutionCallback} addRevolutionCallback
      */
     #addRevolutionCallback
-    /**
-     * @type {RevolutionCallback} renderTableCallback
-     */
-    #renderTableCallback // Ez a változó a táblázat renderelésére szolgál
 
     constructor() { // Ez a konstruktor a Manager osztályhoz tartozik
         this.#array = [] // Létrehoz egy üres tömböt
@@ -23,18 +19,10 @@ class Manager {
 
     /**
      * 
-     * @param {RevolutionCallback} callback 
+     * @param {addRevolutionCallback} callback 
      */
     setAddRevolutionCallback(callback) { // Ez a setter beállítja a #addRevolutionCallback változót
         this.#addRevolutionCallback = callback // Beállítja a #addRevolutionCallback változót
-    }
-
-    /**
-     * 
-     * @param {RevolutionCallback} callback 
-     */
-    setRenderTableCallback(callback) { // Ez a setter beállítja a #renderTableCallback változót
-        this.#renderTableCallback = callback // Beállítja a #renderTableCallback változót
     }
 
     /**
