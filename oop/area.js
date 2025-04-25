@@ -60,7 +60,17 @@ class Table extends Area {
         super(cssClass, manager) // Meghívja a szülő osztály konstruktorát
         const tbody = this.#createTable() // Meghívja a #createTable metódust, ami létrehoz egy új táblázatot
         this.manager.setAddRevolutionCallback((revolution) => { // Beállítja a #addRevolutionCallback változót
-            const tr = document.createElement('tr') // Létrehoz egy új tr elemet
+            this.#createRevolutionRow(revolution, tbody) // Meghívja a #createRevolutionRow metódust, ami létrehoz egy új forradalom sort
+        })
+    }
+
+    /**
+     * 
+     * @param {Revolution} revolution 
+     * @param {HTMLTableSectionElement} tbody 
+     */
+    #createRevolutionRow(revolution, tbody) { // Ez egy privát metódus, ami létrehoz egy új forradalom sort
+        const tr = document.createElement('tr') // Létrehoz egy új tr elemet
             tbody.appendChild(tr) // Hozzáadja a tr elemet a tbody elemhez
 
             const forradalomCell = document.createElement('td') // Létrehoz egy új td elemet
@@ -74,7 +84,6 @@ class Table extends Area {
             const sikeresCell = document.createElement('td') // Létrehoz egy új td elemet
             sikeresCell.innerText = revolution.sikeres ? 'igen' : 'nem' // Beállítja a td szövegét a sikeres változóra
             tr.appendChild(sikeresCell) // Hozzáadja a td elemet a tr elemhez
-        })
     }
 
     /**

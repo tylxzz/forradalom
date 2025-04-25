@@ -18,3 +18,4 @@ const manager = new Manager() // Létrehoz egy új Manager objektumot
 const tableDiv = new Table('table', manager) // Létrehoz egy új Table divet a 'table' className-nel
 const formDiv = new Form('form', fConfig, manager) // Létrehoz egy új Form divet a 'form' className-nel  
 const upload = new UploadDownload('upload', manager) // Létrehoz egy új Upload divet a 'upload' className-nel
+const filterOOP = new Filter('filter', manager) // Létrehoz egy új Filter divet a 'filter' className-nel
